@@ -7,6 +7,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"runtime/debug"
 	"time"
 )
@@ -51,4 +52,31 @@ func Example_go() {
 
 	fmt.Println("server start success")
 	time.Sleep(time.Second * 10)
+}
+
+// 一种技巧，通过 defer func() { recover() }() 来处理异常情况
+// 较小的性能消耗：
+// 	case1 2189 ms
+//  case2 2891 ms
+func Example_recover_cost() {
+	func1 := func(counter *int) {
+		*counter = *counter + 1
+	}
+	func2 := func(counter *int) {
+		defer func() { recover() }()
+		*counter = *counter + 1
+	}
+
+	t1 := time.Now()
+	counter := 0
+	for i := 0; i < 1000*1000*1000; i++ {
+		func1(&counter)
+	}
+	log.Println("func1 cost:", time.Now().Sub(t1).Milliseconds(), " ms")
+
+	t1 = time.Now()
+	for i := 0; i < 1000*1000*1000; i++ {
+		func2(&counter)
+	}
+	log.Println("func2 cost:", time.Now().Sub(t1).Milliseconds(), " ms")
 }
