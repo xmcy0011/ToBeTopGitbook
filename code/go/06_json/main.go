@@ -9,8 +9,10 @@ import (
 
 // 嵌套一个对象
 type Info struct {
-	age int `json:"age"`
+	Age int `json:"age"`
 }
+
+var info = Info{Age: 12}
 
 // 嵌套一个对象数组
 type Extra struct {
