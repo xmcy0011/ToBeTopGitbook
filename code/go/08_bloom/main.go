@@ -26,6 +26,13 @@ func main() {
 	errRate2 := float32(matched2-int(n)) / float32(total)
 
 	fmt.Printf("matched:\n b1:%d,errorRate:%f  \n b2:%d,errorRate:%f \n", matched1, errRate1, matched2, errRate2)
+
+	b2.ClearAll()
+	m3 := testMatchBloom(b2, n)
+	initTestBloom(b2, n)
+	m4 := testMatchBloom(b2, n)
+
+	fmt.Printf("after ClearAll matched:%d \nafter ClearAll & initTestBloom matched:%d", m3, m4)
 }
 
 func initTestBloom(b *bloom.BloomFilter, n uint) {
