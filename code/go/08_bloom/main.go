@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/willf/bloom"
 	"strconv"
+
+	"github.com/willf/bloom"
 )
 
 func main() {
