@@ -1,0 +1,3 @@
+{
+  "friend.request.add": "new friend request from {{.Nickname}}"
+}
