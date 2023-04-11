@@ -35,7 +35,7 @@ func main() {
 		// translate
 		content, err := localizer.Localize(&i18n.LocalizeConfig{
 			TemplateData: map[string]interface{}{
-				"Nickname": "小王",
+				"Nickname2": "小王",
 			},
 			DefaultMessage: &i18n.Message{
 				ID:         "friend.request.add",
