@@ -1,0 +1,11 @@
+goos: darwin
+goarch: arm64
+pkg: goexample/13_benchmark
+BenchmarkFib_Table/10-10 	 4648539	       238.7 ns/op
+BenchmarkFib_Table/10-10 	 5012216	       238.4 ns/op
+BenchmarkFib_Table/20-10 	   40706	     29420 ns/op
+BenchmarkFib_Table/20-10 	   40720	     29442 ns/op
+BenchmarkFib_Table/30-10 	     330	   3654533 ns/op
+BenchmarkFib_Table/30-10 	     331	   3620015 ns/op
+PASS
+ok  	goexample/13_benchmark	9.241s
