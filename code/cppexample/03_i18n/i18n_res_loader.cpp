@@ -2,6 +2,7 @@
 #include "cpptoml.h"
 #include <dirent.h>
 #include <exception>
+#include <iostream>
 
 I18NResLoader &I18NResLoader::GetInstance() {
     static I18NResLoader loader;
@@ -11,6 +12,7 @@ I18NResLoader &I18NResLoader::GetInstance() {
 void I18NResLoader::LoadFile(const std::string &lang, const std::string &filePath) {
     auto ptr = cpptoml::parse_file(filePath);
     res_[lang] = ptr;
+    std::cout << "load i18n resouces, langauge: " << lang << ", filePath: " << filePath << std::endl;
 }
 
 void GetFileNames(std::string path, std::vector<std::string> &filenames) {
@@ -40,10 +42,14 @@ void I18NResLoader::LoadDir(const std::string &langDir) {
         }
 
         // en-US.toml -> en-US
-        size_t pos = f.find_first_of('.');
+        size_t pos = f.find_last_of('.');
+        size_t splitPos = f.find_last_of('/');
         std::string lan = f;
         if (pos != std::string::npos) {
             lan = f.substr(0, pos);
+        }
+        if (splitPos != std::string::npos) {
+            lan = lan.substr(splitPos + 1, lan.length());
         }
 
         // load
