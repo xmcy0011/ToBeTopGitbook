@@ -26,7 +26,18 @@ class I18NResLoader {
      * @param lang         : 语言
      * @param filePath     : 资源 toml 文件路径
      */
-    void Load(const std::string &lang, const std::string & filePath);
+    void LoadFile(const std::string &lang, const std::string & filePath);
+
+    /**
+     * @brief 加载多语言资源
+     * @param filePath     : 资源 toml 文件夹路径
+     * @example 文件夹下资源必须符合如下规则：
+     * [lan].toml 即文件名为语言名称
+     * 如：
+     * en-US.toml
+     * zh-CN.toml
+     */
+    void LoadDir(const std::string &langDir);
 
     /**
      * @brief 加载资源
@@ -38,6 +49,7 @@ class I18NResLoader {
 
   private:
     std::unordered_map<std::string, std::shared_ptr<cpptoml::table>> res_;
+    bool loaded_;
 };
 
 #endif // CODE_CPPEXAMPLE_03_I18N_I18N_RES_LOADER_H_
