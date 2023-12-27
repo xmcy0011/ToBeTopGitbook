@@ -37,9 +37,24 @@ void testLoadDir() {
     std::cout << "zn-CH: " << localizer.Localize(zhCNLan, kSomeError) << std::endl;
 }
 
+/**
+ * @brief ../a/a.test:314 -> a.test:314
+ * @return std::string 
+ */
+std::string getFileName(const std::string &filePath) {
+    size_t pos = filePath.find_last_of('/');
+    std::string name = filePath;
+    if (pos != std::string::npos) {
+        name = filePath.substr(pos + 1, name.length());
+    }
+    return name;
+}
+
 int main(int argc, char **argv) {
     testLoadFile();
     testLoadDir();
+
+    std::cout << getFileName("../a/a.test:314") << std::endl;
 
     try {
         testConflictExecption();
