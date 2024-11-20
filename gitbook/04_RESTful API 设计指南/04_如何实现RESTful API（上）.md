@@ -1,19 +1,19 @@
-# 正确认识 HTTP 协议
+# 如何实现RESTful API（上）
 
 ## 前言
 
 在前面一系列的文章中，我们介绍了 RESTful API 出现的背景，以及为什么要引入 RESTful API 风格。那么从本章开始，我们将进入实现篇，在本篇中，我们主要关注如何实现 RESTful API 风格。
 
-什么是 RESTful API 风格？在  RESTful API 设计指南（1）——开篇词 中，我们进行了总结：
+什么是 RESTful API 风格？在 [RESTful API 设计指南（1）——开篇词](./01_开篇词.md) 中，我们进行了总结：
 
-只要你的 HTTP 接口使用 POST/DELETE/PUT/GET 代表增删改查操作，使用 HTTP 状态码代表结果，使用 URI 代表操作对象，你的 API 就是 RESTful API
+> 只要你的 HTTP 接口使用 POST/DELETE/PUT/GET 代表增删改查操作，使用 HTTP 状态码代表结果，使用 URI 代表操作对象，你的 API 就是 RESTful API
 
 所以，其背后是一个对 HTTP 协议进行再学习的过程，本质上就是要用好 HTTP 协议：
 
-* 设计好 URL 和 HTTP 主体（path和body）：充分利用 URL 的 path 和 query 部分，path 中代表要操作的资源（对象），query放查询条件，body中放请求参数和响应结果
-* 正确选择 HTTP 方法（method）：平常你可能只使用 GET 和 POST 方法，但是 HTTP 协议中还提供了 DELETE、PUT 和 OPTION 等方法。所以，REST 风格中就充分利用了 HTTP 应用层协议的特性，把增删改查分别对应到 HTTP 的 POST、DEELTE、PUT和GET方法上。
-* 正确选择 HTTP 状态码（status code）：正确的使用状态码，当因为客户端参数异常而发生错误，应当返回 400 Bad Request，如果是服务端内部原因发生错误，应当返回 500 Internal Server Error，如果修改成功，通常情况下应当返回 204 No Content。
-* 充分利用 HTTP 报头（request header)：一些通用的参数应当优先考虑放在 HTTP 报头中，比如接口认证，每个接口都需要携带 token，可以使用 Authorization 这个报头。
+* **设计好 URL 和 HTTP 主体（path和body）**：充分利用 URL 的 path 和 query 部分，path 中代表要操作的资源（对象），query放查询条件，body中放请求参数和响应结果
+* **正确选择 HTTP 方法（method）**：平常你可能只使用 GET 和 POST 方法，但是 HTTP 协议中还提供了 DELETE、PUT 和 OPTION 等方法。所以，REST 风格中就充分利用了 HTTP 应用层协议的特性，把增删改查分别对应到 HTTP 的 POST、DEELTE、PUT和GET方法上。
+* **正确选择 HTTP 状态码（status code）**：正确的使用状态码，当因为客户端参数异常而发生错误，应当返回 400 Bad Request，如果是服务端内部原因发生错误，应当返回 500 Internal Server Error，如果修改成功，通常情况下应当返回 204 No Content。
+* **充分利用 HTTP 报头（request header)**：一些通用的参数应当优先考虑放在 HTTP 报头中，比如接口认证，每个接口都需要携带 token，可以使用 Authorization 这个报头。
 
 下面，让我们再复习一下 HTTP 协议的这几个关键部分。
 
@@ -71,7 +71,7 @@ GET /queryUserInfo?userId=1
 
 但是在 RESTful API 中，id 是放在 path 中的。如下图，其中 :id 代表了占位符，具体的值在 Path Variables 中指定：
 
-![image](../images/03-path-example.png)
+![image](./images/03-path-example.png)
 
 一方面，这里也是父子关系的体现，即用户 33 属于 users 这个集合。另一方面，相比传统 API，RESTful API 中 path 标志了一个唯一的资源，/users/33 永远只会出现一个且始终指向同一个用户。
 
@@ -81,20 +81,20 @@ GET /queryUserInfo?userId=1
 
 其定义如下：
 
-* GET：表示检索信息，允许缓存。可以请求任意资源，如 HTML、图像或者视频、JSON文件、XML文件和CSS文件等等，是一种安全操作，意味着它不应该改变服务器上任何资源的状态
-* POST：将数据发送到服务器进行处理，不允许缓存。数据格式可以是 xml、json等。POST操作是不安全的，因为它有能力更新服务器状态，并且在执行时对服务器的状态造成潜在的副作用。
-* PUT：用于替换给定URL标识的资源，如果资源已存在，则进行修改，应响应200（OK）或者204（No Content），否则创建资源，返回 201（Created）。PUT操作是不安全的，可以改变服务器资源的状态。但它是幂等的，调用100次 PUT 操作将航班状态设置为准时和调用一次 PUT 操作的效果是一样的，航班最终的状态都是准时。
-* DELETE：用户删除给定URL标志的资源，如果执行成功且响应中包含说明数据，应响应 200（OK），否则应响应 204（No Content），和PUT操作一样，DELETE方法是幂等但是不安全的。
+* **GET**：表示检索信息，允许缓存。可以请求任意资源，如 HTML、图像或者视频、JSON文件、XML文件和CSS文件等等，是一种安全操作，意味着它不应该改变服务器上任何资源的状态
+* **POST**：将数据发送到服务器进行处理，不允许缓存。数据格式可以是 xml、json等。POST操作是不安全的，因为它有能力更新服务器状态，并且在执行时对服务器的状态造成潜在的副作用。
+* **PUT**：用于替换给定URL标识的资源，如果资源已存在，则进行修改，应响应200（OK）或者204（No Content），否则创建资源，返回 201（Created）。PUT操作是不安全的，可以改变服务器资源的状态。但它是幂等的，调用100次 PUT 操作将航班状态设置为准时和调用一次 PUT 操作的效果是一样的，航班最终的状态都是准时。
+* **DELETE**：用户删除给定URL标志的资源，如果执行成功且响应中包含说明数据，应响应 200（OK），否则应响应 204（No Content），和PUT操作一样，DELETE方法是幂等但是不安全的。
 
 从 HTTP 协议规范中，我们可以发现 GET、POST、PUT 和 DELETE 刚好对应查、增、改、删操作，也就是我们说的增删改查，所以我们可以利用 HTTP Method 代表 API 的动作。这也是为什么传统 API 需要在 path 中声明动作的原因。而 RESTful API 不需要，还是那句话：充分利用 HTTP 应用层协议的特性！
 
 在 RESTful API 中，Method 通常搭配 path 使用，如果按照面向对象的思想，我们可以把 path 看成对象名，把 HTTP method 看成方法，则他们可能的组合如下：
 
-* POST /users：新增一个用户，面向对象表示为 users.add(info)
-* DELETE /users/{id}：删除一个具体的用户，面向对象表示为 users.deleteById(id)
-* PUT /users/{id}：修改某个用户的信息，具体的信息放在请求体中，面向对象表示为 users.updateById(id, info)
-* GET /users?offset=10&limit=100：查询所有用户列表，查询条件放在 query 中，面向对象表示为  users.getAll(offset, limit)
-* GET /users/{id}：某个某个具体的用户信息，面向对象表示为 users.getByUserId(id)
+* `POST /users`：新增一个用户，面向对象表示为 users.add(info)
+* `DELETE /users/{id}`：删除一个具体的用户，面向对象表示为 users.deleteById(id)
+* `PUT /users/{id}`：修改某个用户的信息，具体的信息放在请求体中，面向对象表示为 users.updateById(id, info)
+* `GET /users?offset=10&limit=100`：查询所有用户列表，查询条件放在 query 中，面向对象表示为  users.getAll(offset, limit)
+* `GET /users/{id}`：某个某个具体的用户信息，面向对象表示为 users.getByUserId(id)
 
 ## HTTP Status Code
 
@@ -125,11 +125,13 @@ HTTP/1.1 200 OK
 
 在一些不规范的API设计中，对于 Status Code 的处理，可能会永远返回 200，具体的请求结果被封装在了 Body 中：
 
-```json
+```bash
 HTTP/1.1 200 OK 
 Content-Type: application/json 
 Content-Length: 123 
+```
 
+```json
 {
     "errorCode": 0,
     "errorMsg": "success",
