@@ -1,0 +1,137 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "console API文档",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://api.server.test/v1"
+        }
+    ],
+    "paths": {
+        "/auth/login": {
+            "summary": "登录",
+            "post": {
+                "tags": [
+                    "认证"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_name": {
+                                        "description": "用户名",
+                                        "type": "string"
+                                    },
+                                    "user_pwd": {
+                                        "description": "密码",
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "user_name": "admin",
+                                    "user_pwd": "111111"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "参数错误",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "description": "用户ID"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "description": "认证令牌"
+                                        }
+                                    },
+                                    "example": {
+                                        "id": 1024,
+                                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Resp400"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Resp500"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "description": "业务错误码"
+                    },
+                    "casue": {
+                        "type": "string",
+                        "description": "供开发者查看的错误信息"
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "可以展示给终端用户的错误信息"
+                    }
+                },
+                "example": {
+                    "code": 40000001,
+                    "casue": "hello-restapi.go:12 user_name 参数为空",
+                    "message": "参数不能为空"
+                }
+            }
+        },
+        "responses": {
+            "Resp400": {
+                "description": "参数错误",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "Resp500": {
+                "description": "服务器内部错误",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error",
+                            "examples": {
+                                "example": {
+                                    "code": 5000000,
+                                    "casue": "hello-restapi.go:12 SQL异常",
+                                    "message": "服务器内部错误"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "认证"
+        }
+    ]
+}
