@@ -1,12 +1,12 @@
-# 正确认识 HTTP 协议
+# 如何实现RESTful API（上）
 
 ## 前言
 
 在前面一系列的文章中，我们介绍了 RESTful API 出现的背景，以及为什么要引入 RESTful API 风格。那么从本章开始，我们将进入实现篇，在本篇中，我们主要关注如何实现 RESTful API 风格。
 
-什么是 RESTful API 风格？在  RESTful API 设计指南（1）——开篇词 中，我们进行了总结：
+什么是 RESTful API 风格？在 [RESTful API 设计指南（1）——开篇词](./01_开篇词.md) 中，我们进行了总结：
 
-只要你的 HTTP 接口使用 POST/DELETE/PUT/GET 代表增删改查操作，使用 HTTP 状态码代表结果，使用 URI 代表操作对象，你的 API 就是 RESTful API
+> 只要你的 HTTP 接口使用 POST/DELETE/PUT/GET 代表增删改查操作，使用 HTTP 状态码代表结果，使用 URI 代表操作对象，你的 API 就是 RESTful API
 
 所以，其背后是一个对 HTTP 协议进行再学习的过程，本质上就是要用好 HTTP 协议：
 
@@ -34,18 +34,18 @@ scheme  user information     host     port                  query         fragme
 根据 RFC 3986 文档：
 
 * scheme：协议标识符，用于表示访问资源的具体协议，如下是几个示例：
-  * http：http://www.example.com，表示通过 HTTP 协议访问 www.example.com。
-  * https：https://secure.example.com，表示通过 HTTPS 协议（HTTP 的安全版本）访问 secure.example.com。
-  * ftp：ftp://ftp.example.com/resource.txt，表示通过 FTP 协议访问 ftp.example.com 上的资源 resource.txt。
-  * mailto：mailto:someone@example.com，表示一个电子邮件地址 someone@example.com。
-  * file：file:///C:/path/to/file.txt，表示本地文件系统中的文件 C:/path/to/file.txt。
+  * http：[http://www.example.com](http://www.example.com)，表示通过 HTTP 协议访问 www.example.com。
+  * https：[https://secure.example.com](https://secure.example.com)，表示通过 HTTPS 协议（HTTP 的安全版本）访问 secure.example.com。
+  * ftp：[ftp://ftp.example.com/resource.txt](ftp://ftp.example.com/resource.txt)，表示通过 FTP 协议访问 ftp.example.com 上的资源 resource.txt。
+  * mailto：[mailto:someone@example.com](mailto:someone@example.com)，表示一个电子邮件地址 someone@example.com。
+  * file：[file:///C:/path/to/file.txt](file:///C:/path/to/file.txt)，表示本地文件系统中的文件 C:/path/to/file.txt。
 * authority：标识资源的访问权限信息，包括用户信息（可选）、主机和端口号（可选），示例如下：
-  * 带用户信息的 URI：http://user:password@www.example.com
-  * 带端口号的 URI：http://www.example.com:8080
-  * 常见的 URI：http://www.example.com
+  * 带用户信息的 URI：[http://user:password@www.example.com](http://user:password@www.example.com)
+  * 带端口号的 URI：[http://www.example.com:8080](http://www.example.com:8080)
+  * 常见的 URI：[http://www.example.com](http://www.example.com)
 * path：标识资源在主机上的具体位置和层级结构，类似于文件系统中的路径。示例如下：
-  * 简单路径：http://www.example.com/index.html
-  * 带目录的路径：http://www.example.com/images/photo.jpg
+  * 简单路径：[http://www.example.com/index.html](http://www.example.com/index.html)
+  * 带目录的路径：[http://www.example.com/images/photo.jpg](http://www.example.com/images/photo.jpg)
 * query：用于在请求资源时传递附加信息，也叫查询参数。位于 path 之后，使用英文问号（?）分割，通常由一个或多个键值对组成，键和值之间用等号（=）分隔，多个键值对之间用和号（&）分隔。
 
 其中，我们需要重点关注 path 和 query 2个部分，正如开头所说，HTTP是应用层协议，要实现 RESTful API 的关键就是，我们要充分利用其应用层协议的特性，不要重复造轮子。
@@ -71,7 +71,7 @@ GET /queryUserInfo?userId=1
 
 但是在 RESTful API 中，id 是放在 path 中的。如下图，其中 :id 代表了占位符，具体的值在 Path Variables 中指定：
 
-![image](../images/03-path-example.png)
+![image](./images/03-path-example.png)
 
 一方面，这里也是父子关系的体现，即用户 33 属于 users 这个集合。另一方面，相比传统 API，RESTful API 中 path 标志了一个唯一的资源，/users/33 永远只会出现一个且始终指向同一个用户。
 
