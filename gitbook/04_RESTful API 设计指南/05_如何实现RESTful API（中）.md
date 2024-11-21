@@ -101,6 +101,11 @@ URL 设计完成后，我们来设计 HTTP 主体部分，主要分成：
 
 ![04-login-api-2](./images/04-login-api-2.png)
 
+更多关于各种 HTTP 方法的对比和幂等性在前文有详细介绍：
+
+* [RESTfulAPI设计指南（2）——为什么要用（上）](./02_为什么要用（上）.md)
+* [RESTfulAPI设计指南（3）——为什么要用（下）](./03_为什么要用（下）.md)
+
 #### 3）充分利用 HTTP 报头
 
 本案例中，我们不涉及一些公共参数的传递，故无需携带 HTTP 头，但是当我们认证完成返回 token 给客户端时，后续的请求都需要携带 token，此时我们就可以利用 HTTP 协议中的 "Authorization"，这个部分在案例2中会介绍。
@@ -132,9 +137,15 @@ URL 设计完成后，我们来设计 HTTP 主体部分，主要分成：
 
 ### OpenAPI 规范简介
 
-API 设计工具我们使用 VS Code + OpenAPI (Swagger) Editor，后续文章会深入介绍 OpenAPI 规范及其语法，这里我们先跳过，你只需要知道这是一个能帮我们很容易写出 RESTful API 文档的工具即可。
+通过上面的步骤，我们确定了登录 API 的所有细节，此时，一个很关键的问题是：我们的 API 如何管理？或者说如何分享给团队其他成员？使用何种工具？选择代码生成，还是手动维护？
 
-我们创建一个 example.json ，复制如下内容：
+这个时候，我们就需要了解 [OpenAPI](https://swagger.io/specification/) 规范 了：这是一种通过 json 或者 yaml 表达 API 的语法规范，可以理解成一种声明式编写 API 的语言，还记得初学 HTML 的时候吗？我们使用代码编辑器编辑 html 文件，然后通过浏览器进行渲染输出。
+
+OpenAPI 规范也是同样的道理，我们在 VS Code 中编写，然后使用 OpenAPI (Swagger) Editor 插件进行预览，使用 redocly-cli 编译成静态 html 文件，通过 nginx，我们可以很方便的分享给任何人。
+
+关于 OpenAPI 规范及其语法的更多细节，后续文章会深入介绍，这里我们先跳过，目前你只需要知道这是一个能帮我们很容易写出 RESTful API 文档的工具即可。
+
+现在，让我们来创建一个 example.json ，其内容如下：
 
 ```json
 {
@@ -276,7 +287,11 @@ API 设计工具我们使用 VS Code + OpenAPI (Swagger) Editor，后续文章�
 }
 ```
 
-然后使用 redocly（[https://github.com/Redocly/redocly-cli](https://github.com/Redocly/redocly-cli)）工具进行转换：
+我们可以使用 vs code 进行预览：
+
+![vs-code-preview](./images/05-vs-code-preview.png)
+
+部署时，使用 redocly（[https://github.com/Redocly/redocly-cli](https://github.com/Redocly/redocly-cli)）工具进行转换：
 
 ```bash
 $ npx @redocly/cli build-docs example1.json
@@ -417,4 +432,21 @@ Content-Length: 78
 
 ## 总结
 
-待补充。
+在本文中，我们介绍了一个极简的登录 RESTful API 是如何一步一步从 0 到 1 设计出来的，也给出了一个 go 代码的极简实现，目的是为了强调说明实现 RESTful API 的这 3 个关键部分：
+
+* URL 和 HTTP 主体
+* HTTP 方法
+* HTTP 状态码
+
+我们也简单介绍了一下 OpenAPI 规范，并且给出了一个示例文档，让我们能有一个直观的感受。OpenAPI 规范是整个 RESTful API 设计指南的核心部分，后续我们会花很大的篇幅来进行深入介绍。
+
+在下一篇文章中，我们会结合 go 中比较流行的 gin 框架来实现一个 CRUD 的 RESTful API，主要围绕下面几个方面：
+
+* 真正的 RESTful API，需要注意哪些细节？
+* gin 框架的一些特性，path 变量如何实现？
+* OpenAPI 规范的一些语法和 Redocly 生成的文档怎么看
+
+## 参考
+
+* [OpenAPI Specification 3.1.0](https://swagger.io/specification/)
+* [https://github.com/Redocly/redocly-cli](https://github.com/Redocly/redocly-cli)
